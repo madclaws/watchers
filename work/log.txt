@@ -1,3 +1,6 @@
 2021-08-02 21:10:05
     |> TODO - Remove Garuda logo to NightWatcher's.
-    
+    |> TODO - Currently we will implement keyboard input first,
+        and then on polishing, we will add buttons.
+    |> TODO - we need a good lush green field background.
+    |> Make images into a spritesheet.

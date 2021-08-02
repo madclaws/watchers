@@ -7,3 +7,7 @@ export const GAME_PARENT: string = "game";
 export const GAME_VERSION: string = "0.0.2";
 export const GAME_WIDTH: number = 720;
 export const GAME_HEIGHT: number = 1280;
+
+export const WORLD_HEIGHT: number = 640;
+export const WORLD_WIDTH: number = 640;
+export const TILE_SIZE: number = 64;

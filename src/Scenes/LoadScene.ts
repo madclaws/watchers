@@ -17,21 +17,29 @@ export default class LoadScene extends Scene {
     console.log("On loadscene preload")
     this.renderLoader();
 		this.load.crossOrigin = "anonymous";
-		// this.loadImages();
+		this.loadImages();
 		// this.loadAudio();
+    this.loadLevelJSon();
 		this.load.on("progress", this.onFileComplete.bind(this));
 		this.load.on("complete", this.onAllFilesLoaded.bind(this));
-    this.onAllFilesLoaded();
+    // this.onAllFilesLoaded();
   }
 
   private loadImages(): void {
     console.log("load images");
-    // TODO => Remove the temp asset
-    this.load.image("logo", "assets/images_dev/logo.png");
+    this.load.image("enemy", "assets/images_dev/enemy.png");
+    this.load.image("hero", "assets/images_dev/hero.png");
+    this.load.image("walkable", "assets/images_dev/walkable.png");
+    this.load.image("wall", "assets/images_dev/wall.png");
     // this.load.atlas("atlas", "assets/images/atlas.png", "assets/images/atlas.json");
   }
 
   private loadAudio(): void {
+  
+  }
+
+  private loadLevelJSon(): void {
+    this.load.json("world_level", "assets/world.json");
   }
 
   private onFileComplete(progress: number): void {
