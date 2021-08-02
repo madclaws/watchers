@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "phaser": "^3.50.0",
+    "phoenix": "^1.5.9",
     "webpack-obfuscator": "0.24.6"
   },
   "scripts": {

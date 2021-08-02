@@ -3,6 +3,7 @@
 */
 
 import { Scene } from "phaser";
+import { NetworkManager } from "../Classes/NetworkManager";
 import { WorldManager } from "../Classes/WorldManager";
 import { GAME_HEIGHT, GAME_WIDTH, TILE_SIZE, WORLD_HEIGHT, WORLD_WIDTH } from "../Constants";
 import { Player } from "../Containers/Player";
@@ -19,8 +20,10 @@ export default class GameplayScene extends Scene {
 
   public create(): void {
     console.log("Gameplay Scene");
+    NetworkManager.init();
+    NetworkManager.joinWorld();
+    NetworkManager.eventEmitter.on("player_joined", this.onPlayerJoined, this);
     this.renderWorld();
-    this.renderPlayer();
   }  
   
   private renderWorld(): void {
@@ -38,12 +41,16 @@ export default class GameplayScene extends Scene {
     }
   }
 
-  private renderPlayer(): void {
-    const player = new Player(this, this.getActualPositoin(5, 6), WorldTiles.Player);
+  private renderPlayer(row: number, col: number): void {
+    const player = new Player(this, this.getActualPositoin(row, col), WorldTiles.Player);
   }
 
   private getActualPositoin(row: number, col: number): ICoords {
     return {x: this.gridTileMatrix[row][col].x, y:this.gridTileMatrix[row][col].y} 
+  }
+
+  private onPlayerJoined(position: any) {
+    this.renderPlayer(position.row, position.col)
   }
 
 

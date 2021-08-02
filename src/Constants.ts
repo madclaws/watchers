@@ -11,3 +11,6 @@ export const GAME_HEIGHT: number = 1280;
 export const WORLD_HEIGHT: number = 640;
 export const WORLD_WIDTH: number = 640;
 export const TILE_SIZE: number = 64;
+
+// Enpoint Urls
+export const SOCKET_URL_DEV: string = "ws://localhost:4000/socket";
