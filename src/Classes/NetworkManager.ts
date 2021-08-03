@@ -13,13 +13,12 @@ export class NetworkManager {
     public static init(): void {
         this.playerId = "watcher_anon_" + Math.floor(Math.random() * 1000);
         this.eventEmitter = new Phaser.Events.EventEmitter();
-        this.socket = new Socket(SOCKET_URL_DEV, {userId: this.playerId}) 
+        this.socket = new Socket(SOCKET_URL_DEV, {params: {userId: this.playerId}}); 
         this.socket.connect();
     }
 
     public static joinWorld(): void {
         this.worldChannel = this.socket.channel("world:demo", {userId: this.playerId})
-        this.worldChannel.on("new_msg", msg => console.log("Got message", msg) )
         
         this.worldChannel.join()
           .receive("ok", ({messages}) => console.log("Joined WorldChannel Success", messages) )
@@ -29,12 +28,22 @@ export class NetworkManager {
         this.registerEvents();
     }
 
+    public static sendMessage(event: string, msg: any): void {
+        this.worldChannel.push(event, msg);
+    }
+
     private static registerEvents() {
         this.worldChannel.on("player_joined", this.onPlayerJoined.bind(this))
+        this.worldChannel.on("move_updated", this.onMoveUpdated.bind(this))
     }
 
     private static onPlayerJoined(msg: any): void {
         console.log("On player joined", msg);
         this.eventEmitter.emit("player_joined", msg.position);
+    }
+
+    private static onMoveUpdated(msg: any): void {
+        console.log("On move updated", msg);
+        this.eventEmitter.emit("move_updated", msg.position);
     }
 }

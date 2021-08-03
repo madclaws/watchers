@@ -17,6 +17,10 @@ export class Player extends Phaser.GameObjects.Container {
         this.create(tileIndex);
     }
 
+    public updatePosition(position: ICoords): void {
+        this.setPosition(position.x, position.y);
+    }
+
     private create(tileIndex: WorldTiles): void {
         this.setSize(TILE_SIZE, TILE_SIZE);
         this.renderPlayer(tileIndex);

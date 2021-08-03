@@ -31,6 +31,10 @@ export default class LoadScene extends Scene {
     this.load.image("hero", "assets/images_dev/hero.png");
     this.load.image("walkable", "assets/images_dev/walkable.png");
     this.load.image("wall", "assets/images_dev/wall.png");
+
+    this.load.image("btn_normal", "assets/images_dev/btn_normal.png");
+    this.load.image("btn_attack", "assets/images_dev/btn_attack.png");
+
     // this.load.atlas("atlas", "assets/images/atlas.png", "assets/images/atlas.json");
   }
 
