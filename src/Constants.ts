@@ -14,3 +14,4 @@ export const TILE_SIZE: number = 64;
 
 // Enpoint Urls
 export const SOCKET_URL_DEV: string = "ws://localhost:4000/socket";
+export const SOCKET_URL_PROD: string = "wss://watchex.gigalixirapp.com/socket";

@@ -23,6 +23,9 @@ export default class GameplayScene extends Scene {
 
   public create(): void {
     // console.log("Gameplay Scene");
+    this.renderWorld();
+    this.renderButtons();
+    
     NetworkManager.init();
     NetworkManager.joinWorld();
     NetworkManager.eventEmitter.on("player_joined", this.onPlayerJoined, this);
@@ -32,8 +35,7 @@ export default class GameplayScene extends Scene {
     NetworkManager.eventEmitter.on("player_left", this.onPlayerLeft, this)
 
 
-    this.renderWorld();
-    this.renderButtons();
+    
   }  
   
   private renderWorld(): void {

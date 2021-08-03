@@ -3,7 +3,7 @@
 */
 
 import {Socket} from "phoenix";
-import { SOCKET_URL_DEV } from "../Constants";
+import { SOCKET_URL_DEV, SOCKET_URL_PROD } from "../Constants";
 
 export class NetworkManager {
     public static eventEmitter: Phaser.Events.EventEmitter;
@@ -19,7 +19,7 @@ export class NetworkManager {
             this.playerId = params.name;
         }
         this.eventEmitter = new Phaser.Events.EventEmitter();
-        this.socket = new Socket(SOCKET_URL_DEV, {params: {userId: this.playerId}}); 
+        this.socket = new Socket(SOCKET_URL_PROD, {params: {userId: this.playerId}}); 
         this.socket.connect();
     }
 
