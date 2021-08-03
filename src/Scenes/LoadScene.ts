@@ -14,7 +14,7 @@ export default class LoadScene extends Scene {
   }
 
   public preload(): void {
-    console.log("On loadscene preload")
+    // console.log("On loadscene preload")
     this.renderLoader();
 		this.load.crossOrigin = "anonymous";
 		this.loadImages();
@@ -26,7 +26,7 @@ export default class LoadScene extends Scene {
   }
 
   private loadImages(): void {
-    console.log("load images");
+    // console.log("load images");
     this.load.image("enemy", "assets/images_dev/enemy.png");
     this.load.image("hero", "assets/images_dev/hero.png");
     this.load.image("walkable", "assets/images_dev/walkable.png");
@@ -47,7 +47,7 @@ export default class LoadScene extends Scene {
   }
 
   private onFileComplete(progress: number): void {
-    console.log("On file complete");
+    // console.log("On file complete");
     if (this.progressBar.scaleX < progress) {
       this.progressBar.scaleX = progress;
     }
@@ -58,12 +58,12 @@ export default class LoadScene extends Scene {
   }
 
   private renderLoader(): void {
-    const logo: Phaser.GameObjects.Image = this.add.image(GAME_WIDTH / 2,
-      GAME_HEIGHT / 2 - 150, "logo");
+    // const logo: Phaser.GameObjects.Image = this.add.image(GAME_WIDTH / 2,
+    //   GAME_HEIGHT / 2 - 150, "logo");
     this.progressBar = this.add.image(GAME_WIDTH / 2 - 250,
       GAME_HEIGHT / 2 + 100, "loader");
     const powered: Phaser.GameObjects.Text = this.add.text(GAME_WIDTH / 2,
-      GAME_HEIGHT / 2 + 200, "powered by Garuda", {fontFamily: "FORVERTZ", fontSize: "50px",
+      GAME_HEIGHT / 2  - 50, "Watchers", {fontFamily: "FORVERTZ", fontSize: "80px",
     color: "#ffffff"});
     powered.setOrigin(0.5);
     this.progressBar.scaleX = 0;

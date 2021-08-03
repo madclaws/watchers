@@ -12,7 +12,7 @@ export class WorldManager {
         // TODO -> Idealy we should fetch the world from server,
         // or atleast the other player positions.
         this.worldGrid = data.world;
-        console.log("World Level data => ", this.worldGrid);
+        // console.log("World Level data => ", this.worldGrid);
         return this.worldGrid;
     }
 
@@ -30,8 +30,9 @@ export class WorldManager {
                 break;
             case 4: 
                 tileTexture = "enemy";
+                break;
             default:
-                throw new Error("Invalid tileIndex");
+                throw new Error("Invalid tileIndex => " + tileIndex,);
                 break;
         }
         return tileTexture;

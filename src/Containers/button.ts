@@ -52,7 +52,16 @@ export class Button extends Phaser.GameObjects.Container {
     }
 
     private onClick(): void {
-        console.log(this.action);
-        NetworkManager.sendMessage("player_move", this.action);
+        if (!NetworkManager.isInputEnabled) {
+            // console.log("dead!!");
+            return;
+        }
+        // console.log(this.action);
+        if (this.action !== "Attack") {
+            NetworkManager.sendMessage("player_move", this.action);
+        } else {
+            NetworkManager.sendMessage("player_attack", this.action);
+        }
+
     }
 }

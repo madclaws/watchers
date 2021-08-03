@@ -13,7 +13,8 @@ import { ICoords } from "../Utils/Interfaces";
 
 export default class GameplayScene extends Scene {
   private gridTileMatrix: Phaser.GameObjects.Image[][] = [];
-  private player: Player;
+  private player: Player = undefined;
+  private enemyObj = {};
   public constructor() {
     super({
       key: "GameplayScene"
@@ -21,17 +22,22 @@ export default class GameplayScene extends Scene {
   }
 
   public create(): void {
-    console.log("Gameplay Scene");
+    // console.log("Gameplay Scene");
     NetworkManager.init();
     NetworkManager.joinWorld();
     NetworkManager.eventEmitter.on("player_joined", this.onPlayerJoined, this);
     NetworkManager.eventEmitter.on("move_updated", this.onMoveUpdated, this);
+    NetworkManager.eventEmitter.on("player_died", this.onPlayerDied, this)
+    NetworkManager.eventEmitter.on("player_respawn", this.onPlayerRespawn, this);
+    NetworkManager.eventEmitter.on("player_left", this.onPlayerLeft, this)
+
+
     this.renderWorld();
     this.renderButtons();
   }  
   
   private renderWorld(): void {
-    console.log("Rendering world...");
+    // console.log("Rendering world...");
     const worldGrid = WorldManager.createWorldGrid(this);
     const startY: number = (WORLD_HEIGHT/2) - (TILE_SIZE / 2);
     const startX: number = (GAME_WIDTH - WORLD_WIDTH) / 2 + (TILE_SIZE / 2 - 9);
@@ -45,16 +51,26 @@ export default class GameplayScene extends Scene {
     }
   }
 
-  private renderPlayer(row: number, col: number): void {
-    this.player = new Player(this, this.getActualPositoin(row, col), WorldTiles.Player);
-  }
-
   private getActualPositoin(row: number, col: number): ICoords {
     return {x: this.gridTileMatrix[row][col].x, y:this.gridTileMatrix[row][col].y} 
   }
 
-  private onPlayerJoined(position: any) {
-    this.renderPlayer(position.row, position.col)
+  private onPlayerJoined(playersData: any[]) {
+    for(let i = 0; i < playersData.length; i++) {
+      const pos = playersData[i].position;
+      if(playersData[i].id === NetworkManager.playerId) {
+        if (!this.player) {
+          this.player = new Player(this, this.getActualPositoin(pos.row, pos.col), WorldTiles.Player,
+          playersData[i].id);
+        }
+      } else {
+        if (!this.enemyObj[playersData[i].id]) {
+          const enemy = new Player(this, this.getActualPositoin(pos.row, pos.col), WorldTiles.Enemy,
+          playersData[i].id);
+          this.enemyObj[playersData[i].id] = enemy;
+        }
+      }
+    }
   }
 
   private renderButtons(): void {
@@ -65,12 +81,51 @@ export default class GameplayScene extends Scene {
     const attackButton = new Button(this, {x: 580 + 20, y: 980}, "Attack");
   }
 
-  private onMoveUpdated(position: any): void {
-    this.player.updatePosition(this.getActualPositoin(position.row, position.col))
+  private onMoveUpdated(playerData: any): void {
+    const position = playerData.position;
+    if (playerData.id === NetworkManager.playerId) {
+      this.player.updatePosition(this.getActualPositoin(position.row, position.col))
+    } else {
+      const enemy = this.enemyObj[playerData.id] as Player;
+      if (enemy) {
+        enemy.updatePosition(this.getActualPositoin(position.row, position.col));
+      }
+    }
+    this.player.setDepth(100);
   }
 
+  private onPlayerDied(id: string): void {
+    if (id === NetworkManager.playerId) {
+      this.player.visible = false;
+      NetworkManager.isInputEnabled = false;
+    } else {
+      const enemy = this.enemyObj[id] as Player;
+      if (enemy) {
+        enemy.visible = false;
+      }
+    }
+  }
 
-  
+  private onPlayerRespawn(playerData: any): void {
+    const position = playerData.position;
+    if (playerData.id === NetworkManager.playerId) {
+      this.player.updatePosition(this.getActualPositoin(position.row, position.col))
+      this.player.visible = true;
+      NetworkManager.isInputEnabled = true;
+    } else {
+      const enemy = this.enemyObj[playerData.id] as Player;
+      if (enemy) {
+        enemy.updatePosition(this.getActualPositoin(position.row, position.col));
+        enemy.visible = true;
+      }
+    }
+  }
 
+  private onPlayerLeft(id: string): void {
+      const enemy = this.enemyObj[id] as Player;
+      if (enemy) {
+        enemy.visible = false;
+      }
+  }
 
 }
