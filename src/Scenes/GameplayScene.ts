@@ -33,6 +33,7 @@ export default class GameplayScene extends Scene {
     NetworkManager.eventEmitter.on("player_died", this.onPlayerDied, this)
     NetworkManager.eventEmitter.on("player_respawn", this.onPlayerRespawn, this);
     NetworkManager.eventEmitter.on("player_left", this.onPlayerLeft, this)
+    NetworkManager.eventEmitter.on("player_rejoined", this.onPlayerRejoined, this)
 
 
     
@@ -136,6 +137,15 @@ export default class GameplayScene extends Scene {
       if (enemy) {
         enemy.visible = false;
       }
+    }
+  }
+
+  private onPlayerRejoined(playerData: any): void {
+    const enemy = this.enemyObj[playerData.id] as Player;
+    const position = playerData.position;
+    if (enemy) {
+      enemy.updatePosition(this.getActualPositoin(position.row, position.col));
+      enemy.visible = true;
     }
   }
 
