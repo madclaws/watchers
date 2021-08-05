@@ -123,11 +123,20 @@ export default class GameplayScene extends Scene {
     }
   }
 
-  private onPlayerLeft(id: string): void {
-      const enemy = this.enemyObj[id] as Player;
+  private onPlayerLeft(playerData: any): void {
+    if (playerData.id === NetworkManager.playerId) {
+      console.log("this client should rejoin");
+      window.setTimeout(() => {
+        NetworkManager.sendMessage("player_rejoin", {pos: playerData.position, world: "demo"})
+      }, 1000);
+      // this.player.visible = true;
+      // NetworkManager.isInputEnabled = true;
+    } else {
+      const enemy = this.enemyObj[playerData.id] as Player;
       if (enemy) {
         enemy.visible = false;
       }
+    }
   }
 
 }

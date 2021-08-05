@@ -44,6 +44,7 @@ export class NetworkManager {
         this.worldChannel.on("player_died", this.onPlayerDied.bind(this));
         this.worldChannel.on("player_respawned", this.onPlayerRespawn.bind(this));
         this.worldChannel.on("player_left", this.onPlayerLeft.bind(this));
+
         window.addEventListener("beforeunload", this.onClientUnload.bind(this));
         window.addEventListener("unload", this.onClientUnload.bind(this));
     }
@@ -70,7 +71,7 @@ export class NetworkManager {
 
     private static onPlayerLeft(msg: any): void {
         // console.log("On player left", msg);
-        this.eventEmitter.emit("player_left", msg.id);
+        this.eventEmitter.emit("player_left", msg);
     }
 
     private static onClientUnload(): void {
