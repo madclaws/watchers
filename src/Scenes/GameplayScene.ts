@@ -21,12 +21,12 @@ export default class GameplayScene extends Scene {
     })
   }
 
-  public create(): void {
+  public async create() {
     // console.log("Gameplay Scene");
     this.renderWorld();
     this.renderButtons();
     
-    NetworkManager.init();
+    await NetworkManager.init();
     NetworkManager.joinWorld();
     NetworkManager.eventEmitter.on("player_joined", this.onPlayerJoined, this);
     NetworkManager.eventEmitter.on("move_updated", this.onMoveUpdated, this);

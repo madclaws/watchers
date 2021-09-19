@@ -11,7 +11,7 @@ export class NetworkManager {
     public static playerId: string;
     private static worldChannel: any;
     public static isInputEnabled: boolean = true;
-    public static init(): void {
+    public static async init(){
         const urlSearchParams = new URLSearchParams(window.location.search);
         const params = Object.fromEntries(urlSearchParams.entries());
         this.playerId = "w_" + Math.floor(Math.random() * 1000);
@@ -19,7 +19,10 @@ export class NetworkManager {
             this.playerId = params.name;
         }
         this.eventEmitter = new Phaser.Events.EventEmitter();
-        this.socket = new Socket(SOCKET_URL_PROD, {params: {userId: this.playerId}}); 
+        let SOCKET_URL = await this.getLatestEndpoint();
+        SOCKET_URL = "ws://" + SOCKET_URL + "/socket";
+        console.warn("Connected to => ", SOCKET_URL);
+        this.socket = new Socket(SOCKET_URL, {params: {userId: this.playerId}}); 
         this.socket.connect();
     }
 
@@ -82,5 +85,16 @@ export class NetworkManager {
 
     private static onClientUnload(): void {
         this.worldChannel.leave();
+    }
+
+    private static async getLatestEndpoint() {
+        try{
+            const resp = await fetch("http://localhost:4000/api/get-endpoint?app_name=watchex")
+            let endpointData = await resp.json();
+            return endpointData.endpoint;
+        } catch(e) {
+            console.log("Error in fetching endpoint from Discovery");           
+        }
+        return "";
     }
 }
